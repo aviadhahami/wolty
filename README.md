@@ -29,6 +29,10 @@ $ docker run aviadhahami/wolty "MY_LOCATION" --random
 ```
 Will randomly select a venue. Hungry but it yielded a shakes bar? eat shit Leeroy. _Or just re-run. doh._
 
+### PIX OR IT DIDN'T HAPPEN
+![Screen Recording 2021-07-01 at 20 51 48](https://user-images.githubusercontent.com/7353632/124170972-a27afb00-dab0-11eb-9468-6ccbb1b56839.gif)
+
+
 ### Wanna eat the wolrd but not sure in which order? use `sort`!
 > A quick reminder that bucket sort is not really a sort
 ```sh
