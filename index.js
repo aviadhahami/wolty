@@ -23,8 +23,8 @@ function present(venues){
 			results.push((venue.categories || []).map(v=>v.name));
 			results.push(venue.estimate);
 			results.push(venue.delivery_price);
-			results.push(new Array(Number(venue.price_range)).fill('$').join(''))
-			results.push(new Array(Number(venue.rating.rating)).fill('★').join(''));
+			results.push(new Array(Number(venue.price_range || 0)).fill('$').join(''))
+			results.push(new Array(Number((venue.rating|| {}).rating) || 0).fill('★').join(''));
 			return results;
 		})
 	)
@@ -62,6 +62,8 @@ async function run(){
 	if (argv.random){
 		return present(onlineVenues[Math.floor(Math.random() * onlineVenues.length)])
 	}
+
+	return present(onlineVenues);
 
 }
 
