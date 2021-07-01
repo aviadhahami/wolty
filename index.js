@@ -43,7 +43,14 @@ function present(venues){
 async function run(){
 
 	if(argv.help || argv.h){
-		return `Usage is 'wolty <location> [--random]' \n // If your location has space in it, use quotes. \n // Also, please use precise location as there are no IO checks nor testing <3 \n // -h to show help \n // --random to randomize a place to order from`;
+		return `
+Usage is 'wolty <location> [--random | --sort=<see below>]'
+// If your location has space in it, use quotes.
+// Also, please use precise location as there are no IO checks nor testing <3
+// -h to show help
+// --random to randomize a place to order from
+// --sort=[rating | price | shippingTime | deliveryPrice]
+`
 	}
 
 	// Make sure we only get one arg
