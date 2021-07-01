@@ -23,7 +23,7 @@ const getRestsURLBuilder = (lat, lon) => `${WOLT_EPS.getRestaurants}lat=${lat}&l
 function present(venues){
 	const arrReadyVenues = [].concat(venues);
 	const table = new Table({
-		head: ['Name', 'Type', 'Delivery est. (minutes)', 'Delivery price', 'Price range', 'Rating']	
+		head: ['Name', 'Type', 'Delivery est. (minutes)', 'Delivery price', 'Price range', 'Rating', 'URL']	
 	});
 	table.push(
 		...arrReadyVenues.map(({venue}) => {
