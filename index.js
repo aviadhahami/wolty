@@ -1,8 +1,8 @@
-const yargs = require('yargs/yargs')
-const { hideBin } = require('yargs/helpers')
+const yargs = require('yargs/yargs');
+const { hideBin } = require('yargs/helpers');
 const argv = yargs(hideBin(process.argv)).argv
 const axios = require('axios');
-
+const Table = require('cli-table');
 
 const WOLT_EPS = {
 	getLocationId: 'https://restaurant-api.wolt.com/v1/google/places/autocomplete/json?input=',
@@ -10,6 +10,24 @@ const WOLT_EPS = {
 	getRestaurants: 'https://restaurant-api.wolt.com/v1/pages/restaurants?'
 }
 const getRestsURLBuilder = (lat, lon) => `${WOLT_EPS.getRestaurants}lat=${lat}&lon=${lon}`;
+
+function present(venues){
+	const arrReadyVenues = [].concat(venues);
+	const table = new Table({
+		head: ['Name', 'Type', 'Delivery Time Est. (minutes)', 'Delivery price']	
+	});
+	table.push(
+		...arrReadyVenues.map(venue => {
+			const results = [];
+			results.push(venue.name);
+			results.push(venue.categories.map(v=>v.name));
+			results.push(venue.estimate);
+			results.push(venue.delivery_price);
+			return results;
+		})
+	)
+	return table.toString();
+}
 
 async function run(){
 
@@ -36,7 +54,13 @@ async function run(){
 											.data
 											.sections[0] // not sure, wolt api :shrug:
 											.items;
-	return nearbyRests.filter(v=>v.venue.online);
+	const onlineVenues = nearbyRests.filter(v=>v.venue.online && v.venue.delivers);
+
+
+	if (argv.random){
+		return present(onlineVenues[Math.floor(Math.random() * onlineVenues.length)])
+	}
+
 }
 
 run().then(console.log).catch(console.error);
