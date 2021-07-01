@@ -2,6 +2,7 @@ const yargs = require('yargs/yargs');
 const { hideBin } = require('yargs/helpers');
 const argv = yargs(hideBin(process.argv)).argv
 const axios = require('axios');
+const orderBy = require('lodash.orderby');
 const Table = require('cli-table');
 
 const WOLT_EPS = {
@@ -9,6 +10,14 @@ const WOLT_EPS = {
 	getLocationGeo: 'https://restaurant-api.wolt.com/v1/google/geocode/json?place_id=',
 	getRestaurants: 'https://restaurant-api.wolt.com/v1/pages/restaurants?'
 }
+
+const COMPARATORS = {
+	rating: 'rating.rating',
+	price: 'price_range',
+	shippingTime: 'estimate',
+	deliveryPrice: 'delivery_price'
+}
+
 const getRestsURLBuilder = (lat, lon) => `${WOLT_EPS.getRestaurants}lat=${lat}&lon=${lon}`;
 
 function present(venues){
@@ -41,7 +50,10 @@ async function run(){
 	if(argv._.length > 1) {
 		return '❌ Immediate arg should be the location';
 	}
-	//return `${WOLT_EPS.getLocationId}${encodeURIComponent(argv._[0])}`
+	
+	if(argv.sort){
+		if(!COMPARATORS[argv.sort]) return `Invalid sort option, "${argv.sort}"; Use one of ${Object.keys(COMPARATORS).join(', ')}`
+	}
 	// 1. Get the location ID from wolt
 	const woltLocations = await axios.get(`${WOLT_EPS.getLocationId}${encodeURIComponent(argv._[0])}`); 
 	const woltLocationId = woltLocations.data.predictions[0].place_id; // This is why we only use single arg with no verifications. Feel free to PR this <3
@@ -54,17 +66,20 @@ async function run(){
 
 	const nearbyRests = (await axios.get(getRestsURLBuilder(coords.lat, coords.lng)))
 											.data
-											.sections[0] // not sure, wolt api :shrug:
+											.sections[0] // not sure, wolt api ¯\_(ツ)_/¯
 											.items;
-	const onlineVenues = nearbyRests.filter(v=>v.venue.online && v.venue.delivers);
-
+	// Filter for open & delivering
+	let relevantVenues = nearbyRests.filter(v=>v.venue.online && v.venue.delivers);
 
 	if (argv.random){
-		return present(onlineVenues[Math.floor(Math.random() * onlineVenues.length)])
+		return present(relevantVenues[Math.floor(Math.random() * relevantVenues.length)])
 	}
 
-	return present(onlineVenues);
+	if(argv.sort){
+		relevantVenues = orderBy(relevantVenues, `venue.${COMPARATORS[argv.sort]}`)
+	}
 
+	return present(relevantVenues);
 }
 
 run().then(console.log).catch(console.error);
