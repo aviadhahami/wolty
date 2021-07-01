@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "cli-table": "^0.3.6",
+    "lodash.orderby": "^4.6.0",
     "yargs": "^17.0.1"
   }
 }
