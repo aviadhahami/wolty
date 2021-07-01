@@ -1,7 +1,5 @@
 FROM node:14-slim
 
-RUN apt-get update
-
 WORKDIR /opt
 
 COPY . .
