@@ -14,15 +14,17 @@ const getRestsURLBuilder = (lat, lon) => `${WOLT_EPS.getRestaurants}lat=${lat}&l
 function present(venues){
 	const arrReadyVenues = [].concat(venues);
 	const table = new Table({
-		head: ['Name', 'Type', 'Delivery Time Est. (minutes)', 'Delivery price']	
+		head: ['Name', 'Type', 'Delivery est. (minutes)', 'Delivery price', 'Price range', 'Rating']	
 	});
 	table.push(
-		...arrReadyVenues.map(venue => {
+		...arrReadyVenues.map(({venue}) => {
 			const results = [];
 			results.push(venue.name);
-			results.push(venue.categories.map(v=>v.name));
+			results.push((venue.categories || []).map(v=>v.name));
 			results.push(venue.estimate);
 			results.push(venue.delivery_price);
+			results.push(new Array(Number(venue.price_range)).fill('$').join(''))
+			results.push(new Array(Number(venue.rating.rating)).fill('★').join(''));
 			return results;
 		})
 	)
