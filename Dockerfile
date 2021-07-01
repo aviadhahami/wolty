@@ -1,4 +1,4 @@
-FROM node:14-slim
+FROM mhart/alpine-node:14
 
 WORKDIR /opt
 
