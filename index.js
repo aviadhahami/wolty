@@ -14,7 +14,7 @@ const WOLT_EPS = {
 const COMPARATORS = {
 	rating: 'rating.rating',
 	price: 'price_range',
-	shippingTime: 'estimate',
+	deliveryTime: 'estimate',
 	deliveryPrice: 'delivery_price'
 }
 
@@ -49,7 +49,7 @@ Usage is 'wolty <location> [--random | --sort=<see below>]'
 // Also, please use precise location as there are no IO checks nor testing <3
 // -h to show help
 // --random to randomize a place to order from
-// --sort=[rating | price | shippingTime | deliveryPrice]
+// --sort=[rating | price | deliveryTime | deliveryPrice]
 `
 	}
 
